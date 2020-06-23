@@ -5,7 +5,8 @@ import './Game.css';
 const CELL_SIZE = 20;
 const WIDTH = 800;
 const HEIGHT = 600;
-
+let total = 0;
+let canClick = true;
 
 class Cell extends React.Component {
     render() {
@@ -45,9 +46,9 @@ class Game extends React.Component {
                 board[y][x] = false;
             }
         }
-
         return board;
     }
+
 
     getElementOffset() {
         const rect = this.boardRef.getBoundingClientRect();
@@ -73,24 +74,27 @@ class Game extends React.Component {
     }
 
     handleClick = (event) => {
+        if (canClick === true) {
+            const elemOffset = this.getElementOffset();
+            const offsetX = event.clientX - elemOffset.x;
+            const offsetY = event.clientY - elemOffset.y;
+            
+            const x = Math.floor(offsetX / CELL_SIZE);
+            const y = Math.floor(offsetY / CELL_SIZE);
+    
+            if (x >= 0 && x <= this.cols && y >= 0 && y <= this.rows) {
+                this.board[y][x] = !this.board[y][x];
+            }
 
-        const elemOffset = this.getElementOffset();
-        const offsetX = event.clientX - elemOffset.x;
-        const offsetY = event.clientY - elemOffset.y;
-        
-        const x = Math.floor(offsetX / CELL_SIZE);
-        const y = Math.floor(offsetY / CELL_SIZE);
+            this.setState({ cells: this.makeCells() });
+        } 
 
-        if (x >= 0 && x <= this.cols && y >= 0 && y <= this.rows) {
-            this.board[y][x] = !this.board[y][x];
-        }
-
-        this.setState({ cells: this.makeCells() });
     }
 
     runGame = () => {
         this.setState({ isRunning: true });
         this.runIteration();
+        canClick = false;
     }
 
     stopGame = () => {
@@ -103,6 +107,7 @@ class Game extends React.Component {
 
     runIteration() {
         let newBoard = this.makeEmptyBoard();
+        total += 1
 
         for (let y = 0; y < this.rows; y++) {
             for (let x = 0; x < this.cols; x++) {
@@ -129,12 +134,6 @@ class Game extends React.Component {
         }, this.state.interval);
     }
 
-    /**
-     * Calculate the number of neighbors at point (x, y)
-     * @param {Array} board 
-     * @param {int} x 
-     * @param {int} y 
-     */
     calculateNeighbors(board, x, y) {
         let neighbors = 0;
         const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
@@ -158,6 +157,7 @@ class Game extends React.Component {
     handleClear = () => {
         this.board = this.makeEmptyBoard();
         this.setState({ cells: this.makeCells() });
+        total = 0
     }
 
     handleRandom = () => {
@@ -185,13 +185,14 @@ class Game extends React.Component {
                 </div>
 
                 <div className="controls">
-                    Update every <input value={this.state.interval} onChange={this.handleIntervalChange} /> msec
+                    Simulation Speed in Milliseconds: <input value={this.state.interval} onChange={this.handleIntervalChange} />
                     {isRunning ?
                         <button className="button" onClick={this.stopGame}>Stop</button> :
                         <button className="button" onClick={this.runGame}>Run</button>
                     }
-                    <button className="button" onClick={this.handleRandom}>Random</button>
                     <button className="button" onClick={this.handleClear}>Clear</button>
+                    <button className="button" onClick={this.handleRandom}>Random</button>
+                    <p className="Generation">Generation: {total}</p>
                 </div>
             </div>
         );
