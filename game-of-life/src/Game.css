@@ -1,0 +1,45 @@
+.Board {
+    z-index: 1;
+    position: relative;
+    margin: 4.5% 0% 1% 45%;
+    padding: 0.02%;
+    background-color: #e61e27;
+    background-image:
+        linear-gradient(#333 1px, transparent 1px),
+        linear-gradient(90deg, #333 1px, transparent 1px);
+}
+
+.Cell {
+    z-index: 1;
+    background: white;
+    position: absolute;
+}
+
+.controls {
+    z-index: 1;
+    position: relative;
+    margin: 1% 0% 1% 35%;
+    color: white;
+}
+
+.Generation {
+    color: white;
+    margin-top: 1%;
+    margin-right: 5%;
+}
+
+.button {
+    z-index: 1;
+    margin-left: 1%;
+    padding: 0.5%;
+    cursor: pointer;
+    background-color: #e61e27;
+    color: white;
+    border-radius: 15%;
+    border: none;
+}
+
+.button:hover {
+    background-color: white;
+    color: #e61e27;
+}
