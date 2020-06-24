@@ -1,5 +1,9 @@
 import React from 'react';
 import './Game.css';
+import {Smiley} from "../src/presets/Smiley";
+import {GliderGun} from "../src/presets/GliderGun";
+import {Pretzel} from "../src/presets/Pretzel";
+import {PictureFrame} from "../src/presets/PictureFrame";
 
 
 const CELL_SIZE = 20;
@@ -7,6 +11,13 @@ const WIDTH = 800;
 const HEIGHT = 600;
 let total = 0;
 let canClick = true;
+
+let presetContainer = {
+    Smiley: Smiley,
+    GliderGun: GliderGun,
+    Pretzel: Pretzel,
+    PictureFrame: PictureFrame,
+}
 
 class Cell extends React.Component {
     render() {
@@ -87,6 +98,7 @@ class Game extends React.Component {
             }
 
             this.setState({ cells: this.makeCells() });
+            console.log(this.board)
         } 
 
     }
@@ -103,6 +115,7 @@ class Game extends React.Component {
             window.clearTimeout(this.timeoutHandler);
             this.timeoutHandler = null;
         }
+        canClick = true;
     }
 
     runIteration() {
@@ -157,7 +170,9 @@ class Game extends React.Component {
     handleClear = () => {
         this.board = this.makeEmptyBoard();
         this.setState({ cells: this.makeCells() });
-        total = 0
+        this.stopGame();
+        total = 0;
+
     }
 
     handleRandom = () => {
@@ -167,6 +182,46 @@ class Game extends React.Component {
             }
         }
 
+        this.setState({ cells: this.makeCells() });
+    }
+
+    handleSmiley = () => {
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.cols; x++) {
+                this.board = presetContainer.Smiley;
+            }
+        }
+        
+        this.setState({ cells: this.makeCells() });
+    }
+
+    handleGliderGun = () => {
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.cols; x++) {
+                this.board = presetContainer.GliderGun;
+            }
+        }
+        
+        this.setState({ cells: this.makeCells() });
+    }
+
+    handlePretzel = () => {
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.cols; x++) {
+                this.board = presetContainer.Pretzel;
+            }
+        }
+        
+        this.setState({ cells: this.makeCells() });
+    }
+
+    handlePictureFrame = () => {
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.cols; x++) {
+                this.board = presetContainer.PictureFrame;
+            }
+        }
+        
         this.setState({ cells: this.makeCells() });
     }
 
@@ -193,11 +248,15 @@ class Game extends React.Component {
                     <button className="button" onClick={this.handleClear}>Clear</button>
                     <button className="button" onClick={this.handleRandom}>Random</button>
                     <p className="Generation">Generation: {total}</p>
+                    <p className="Presets">Presets</p>
+                    <button className="button" onClick={this.handleSmiley}>Smiley</button>
+                    <button className="button" onClick={this.handleGliderGun}>Glider Gun</button>
+                    <button className="button" onClick={this.handlePretzel}>Pretzel</button>
+                    <button className="button" onClick={this.handlePictureFrame}>Picture Frame</button>
                 </div>
             </div>
         );
     }
 }
-
 
 export default Game;
